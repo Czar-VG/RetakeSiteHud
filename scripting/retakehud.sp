@@ -69,7 +69,7 @@ public void displayHud()
 	{
 		if(IsClientInGame(i) && !IsFakeClient(i))
 		{
-			SetHudTextParams(xcord, ycord, holdtime, red, blue, green, 255, 0, 0.25, fadein, fadeout);
+			SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
 			ShowHudText(i, 5, "Retake Bombsite: %s", sitechar);
 		}
 	}
