@@ -5,7 +5,7 @@
 #pragma newdecls required
 
 #define PLUGIN_AUTHOR "Czar"
-#define PLUGIN_VERSION "1.00"
+#define PLUGIN_VERSION "1.3"
 
 Handle cvar_red = INVALID_HANDLE;
 Handle cvar_green = INVALID_HANDLE;
@@ -69,6 +69,12 @@ public void displayHud()
 	{
 		if(IsClientInGame(i) && !IsFakeClient(i))
 		{
+			if(GetPlayerWeaponSlot( i, 4 ) != -1)
+			{
+				SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
+				ShowHudText(i, 5, "Plant The Bomb!");
+				break;
+			}
 			SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
 			ShowHudText(i, 5, "Retake Bombsite: %s", sitechar);
 		}
