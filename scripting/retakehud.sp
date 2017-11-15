@@ -64,19 +64,21 @@ public void displayHud()
 	float holdtime = GetConVarFloat(cvar_holdtime);
 	float xcord = GetConVarFloat(cvar_xcord);
 	float ycord = GetConVarFloat(cvar_ycord);
-	
-	for(int i = 1; i <= MaxClients; i++)
+	if (GameRules_GetProp("m_bWarmupPeriod") == 0) 
 	{
-		if(IsClientInGame(i) && !IsFakeClient(i))
+		for(int i = 1; i <= MaxClients; i++)
 		{
-			if(GetPlayerWeaponSlot( i, 4 ) != -1)
+			if(IsClientInGame(i) && !IsFakeClient(i))
 			{
+				if(GetPlayerWeaponSlot( i, 4 ) != -1)
+				{
+					SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
+					ShowHudText(i, 5, "Plant The Bomb!");
+					break;
+				}
 				SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-				ShowHudText(i, 5, "Plant The Bomb!");
-				break;
+				ShowHudText(i, 5, "Retake Bombsite: %s", sitechar);
 			}
-			SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-			ShowHudText(i, 5, "Retake Bombsite: %s", sitechar);
 		}
 	}
 }
