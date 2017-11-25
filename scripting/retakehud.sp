@@ -53,7 +53,7 @@ public void displayHud()
 {
 	char sitechar[3];
 	
-	if(Retakes_GetCurrrentBombsite() == 0)sitechar = "A";
+	if(Retakes_GetCurrrentBombsite() == BombsiteA)sitechar = "A";
 	else sitechar = "B";
 	
 	int red = GetConVarInt(cvar_red);
