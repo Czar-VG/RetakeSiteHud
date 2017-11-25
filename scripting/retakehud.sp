@@ -74,10 +74,12 @@ public void displayHud()
 				{
 					SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
 					ShowHudText(i, 5, "Plant The Bomb!");
-					break;
 				}
-				SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-				ShowHudText(i, 5, "Retake Bombsite: %s", sitechar);
+				else
+				{
+					SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
+					ShowHudText(i, 5, "Retake Bombsite: %s", sitechar);
+				}
 			}
 		}
 	}
