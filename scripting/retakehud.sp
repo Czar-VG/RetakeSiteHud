@@ -1,12 +1,13 @@
 #include <sourcemod>
 #include <sdktools>
 #include <retakes>
+#include <cstrike>
 
 #pragma semicolon 1
 #pragma newdecls required
 
 #define PLUGIN_AUTHOR "Czar, B3none"
-#define PLUGIN_VERSION "1.3.1"
+#define PLUGIN_VERSION "1.4"
 
 Handle cvar_red = INVALID_HANDLE;
 Handle cvar_green = INVALID_HANDLE;
@@ -17,6 +18,7 @@ Handle cvar_xcord = INVALID_HANDLE;
 Handle cvar_ycord = INVALID_HANDLE;
 Handle cvar_holdtime = INVALID_HANDLE;
 Handle cvar_usingautoplant = INVALID_HANDLE;
+Handle cvar_showterrorists = INVALID_HANDLE;
 
 public Plugin myinfo =
 {
@@ -37,7 +39,8 @@ public void OnPluginStart()
 	cvar_holdtime = CreateConVar("sm_holdtime", "5.0");
 	cvar_xcord = CreateConVar("sm_xcord", "0.42");
 	cvar_ycord = CreateConVar("sm_ycord", "0.3");
-	cvar_ycord = CreateConVar("sm_usingautoplant", "0");
+	cvar_usingautoplant = CreateConVar("sm_usingautoplant", "0");
+	cvar_showterrorists = CreateConVar("sm_showterrorists", "1");
 
 	AutoExecConfig(true, "retakehud");
 	HookEvent("round_start", Event_OnRoundStart);
@@ -54,10 +57,11 @@ public Action displayHud(Handle timer)
 		return;
 	}
 
-	char sitechar[3];
-	sitechar = (Retakes_GetCurrrentBombsite() == BombsiteA) ? "A" : "B";
+	char bombsite[8];
+	bombsite = (Retakes_GetCurrrentBombsite() == BombsiteA) ? "A" : "B";
 
-    bool usingAutoplant = GetConVarBool(cvar_usingautoplant);
+	bool usingAutoplant = GetConVarBool(cvar_usingautoplant);
+	bool showTerrorists = GetConVarBool(cvar_showterrorists);
 	int red = GetConVarInt(cvar_red);
 	int green = GetConVarInt(cvar_green);
 	int blue = GetConVarInt(cvar_blue);
@@ -69,20 +73,39 @@ public Action displayHud(Handle timer)
 
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		if (IsClientInGame(i) && !IsFakeClient(i))
+		int clientTeam = GetClientTeam(i);
+		if (IsValidClient(i))
 		{
-			if (usingAutoplant && GetPlayerWeaponSlot(i, 4) != -1)
+			SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
+
+			if (!usingAutoplant && HasBomb(i))
 			{
-				SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-				ShowHudText(i, 5, "Plant The Bomb!");
+			    // We always want to show this one regardless
+                ShowHudText(i, 5, "Plant The Bomb!");
 			}
 			else
 			{
-				SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-				ShowHudText(i, 5, "Retake Bombsite: %s", sitechar);
+				if (clientTeam == CS_TEAM_CT || (clientTeam == CS_TEAM_T && showTerrorists))
+				{
+					ShowHudText(i, 5, "%s Bombsite: %s", clientTeam == CS_TEAM_T ? "Defend" : "Retake", bombsite);
+				}
 			}
 		}
 	}
+}
+
+stock bool IsValidClient(int client)
+{
+    return client > 0
+        && client <= MaxClients
+        && IsClientConnected(client)
+        && IsClientInGame(client)
+        && !IsFakeClient(client);
+}
+
+stock bool HasBomb(int client)
+{
+    return GetPlayerWeaponSlot(client, 4) != -1;
 }
 
 stock bool IsWarmup()
