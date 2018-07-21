@@ -5,7 +5,7 @@
 #pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_AUTHOR "Czar"
+#define PLUGIN_AUTHOR "Czar, B3none"
 #define PLUGIN_VERSION "1.3.1"
 
 Handle cvar_red = INVALID_HANDLE;
@@ -16,6 +16,7 @@ Handle cvar_fadeout = INVALID_HANDLE;
 Handle cvar_xcord = INVALID_HANDLE;
 Handle cvar_ycord = INVALID_HANDLE;
 Handle cvar_holdtime = INVALID_HANDLE;
+Handle cvar_usingautoplant = INVALID_HANDLE;
 
 public Plugin myinfo =
 {
@@ -23,7 +24,7 @@ public Plugin myinfo =
 	author = PLUGIN_AUTHOR,
 	description = "Bombsite Hud",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "https://github.com/Czar-VG/RetakeSiteHud"
 };
 
 public void OnPluginStart()
@@ -36,6 +37,7 @@ public void OnPluginStart()
 	cvar_holdtime = CreateConVar("sm_holdtime", "5.0");
 	cvar_xcord = CreateConVar("sm_xcord", "0.42");
 	cvar_ycord = CreateConVar("sm_ycord", "0.3");
+	cvar_ycord = CreateConVar("sm_usingautoplant", "0");
 
 	AutoExecConfig(true, "retakehud");
 	HookEvent("round_start", Event_OnRoundStart);
@@ -55,6 +57,7 @@ public Action displayHud(Handle timer)
 	char sitechar[3];
 	sitechar = (Retakes_GetCurrrentBombsite() == BombsiteA) ? "A" : "B";
 
+    bool usingAutoplant = GetConVarBool(cvar_usingautoplant);
 	int red = GetConVarInt(cvar_red);
 	int green = GetConVarInt(cvar_green);
 	int blue = GetConVarInt(cvar_blue);
@@ -68,7 +71,7 @@ public Action displayHud(Handle timer)
 	{
 		if (IsClientInGame(i) && !IsFakeClient(i))
 		{
-			if (GetPlayerWeaponSlot(i, 4) != -1)
+			if (usingAutoplant && GetPlayerWeaponSlot(i, 4) != -1)
 			{
 				SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
 				ShowHudText(i, 5, "Plant The Bomb!");
