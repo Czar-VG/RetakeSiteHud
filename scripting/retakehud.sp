@@ -44,18 +44,16 @@ public void Event_OnRoundStart(Handle event, const char[] name, bool dontBroadca
 	CreateTimer(1.0, Timer_Advertise);
 }
 
-public Action Timer_Advertise(Handle timer)
+public Action displayHud(Handle timer)
 {
-	displayHud();
-}
+    if (!IsWarmup())
+    {
+        return;
+    }
 
-public void displayHud()
-{
 	char sitechar[3];
-	
-	if(Retakes_GetCurrrentBombsite() == BombsiteA)sitechar = "A";
-	else sitechar = "B";
-	
+	sitechar = (Retakes_GetCurrrentBombsite() == BombsiteA) ? "A" : "B";
+
 	int red = GetConVarInt(cvar_red);
 	int green = GetConVarInt(cvar_green);
 	int blue = GetConVarInt(cvar_blue);
@@ -64,23 +62,26 @@ public void displayHud()
 	float holdtime = GetConVarFloat(cvar_holdtime);
 	float xcord = GetConVarFloat(cvar_xcord);
 	float ycord = GetConVarFloat(cvar_ycord);
-	if (GameRules_GetProp("m_bWarmupPeriod") == 0) 
-	{
-		for(int i = 1; i <= MaxClients; i++)
-		{
-			if(IsClientInGame(i) && !IsFakeClient(i))
-			{
-				if(GetPlayerWeaponSlot( i, 4 ) != -1)
-				{
-					SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-					ShowHudText(i, 5, "Plant The Bomb!");
-				}
-				else
-				{
-					SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-					ShowHudText(i, 5, "Retake Bombsite: %s", sitechar);
-				}
-			}
-		}
-	}
+
+    for (int i = 1; i <= MaxClients; i++)
+    {
+        if (IsClientInGame(i) && !IsFakeClient(i))
+        {
+            if (GetPlayerWeaponSlot( i, 4 ) != -1)
+            {
+                SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
+                ShowHudText(i, 5, "Plant The Bomb!");
+            }
+            else
+            {
+                SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
+                ShowHudText(i, 5, "Retake Bombsite: %s", sitechar);
+            }
+        }
+    }
+}
+
+stock bool IsWarmup()
+{
+	return GameRules_GetProp("m_bWarmupPeriod") == 1;
 }
