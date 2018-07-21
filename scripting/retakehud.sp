@@ -83,12 +83,9 @@ public Action displayHud(Handle timer)
 			    // We always want to show this one regardless
                 ShowHudText(i, 5, "Plant The Bomb!");
 			}
-			else
+			else if (clientTeam == CS_TEAM_CT || (clientTeam == CS_TEAM_T && showTerrorists))
 			{
-				if (clientTeam == CS_TEAM_CT || (clientTeam == CS_TEAM_T && showTerrorists))
-				{
-					ShowHudText(i, 5, "%s Bombsite: %s", clientTeam == CS_TEAM_T ? "Defend" : "Retake", bombsite);
-				}
+                ShowHudText(i, 5, "%s Bombsite: %s", clientTeam == CS_TEAM_T ? "Defend" : "Retake", bombsite);
 			}
 		}
 	}
