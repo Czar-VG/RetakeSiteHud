@@ -2,6 +2,7 @@
 #include <sdktools>
 #include <retakes>
 
+#pragma semicolon 1
 #pragma newdecls required
 
 #define PLUGIN_AUTHOR "Czar"
@@ -67,7 +68,7 @@ public Action displayHud(Handle timer)
     {
         if (IsClientInGame(i) && !IsFakeClient(i))
         {
-            if (GetPlayerWeaponSlot( i, 4 ) != -1)
+            if (GetPlayerWeaponSlot(i, 4) != -1)
             {
                 SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
                 ShowHudText(i, 5, "Plant The Bomb!");
