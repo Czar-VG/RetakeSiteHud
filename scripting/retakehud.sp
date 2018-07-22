@@ -17,7 +17,6 @@ Handle cvar_fadeout = INVALID_HANDLE;
 Handle cvar_xcord = INVALID_HANDLE;
 Handle cvar_ycord = INVALID_HANDLE;
 Handle cvar_holdtime = INVALID_HANDLE;
-Handle cvar_usingautoplant = INVALID_HANDLE;
 Handle cvar_showterrorists = INVALID_HANDLE;
 
 public Plugin myinfo =
@@ -39,7 +38,6 @@ public void OnPluginStart()
 	cvar_holdtime = CreateConVar("sm_holdtime", "5.0");
 	cvar_xcord = CreateConVar("sm_xcord", "0.42");
 	cvar_ycord = CreateConVar("sm_ycord", "0.3");
-	cvar_usingautoplant = CreateConVar("sm_usingautoplant", "0");
 	cvar_showterrorists = CreateConVar("sm_showterrorists", "1");
 
 	AutoExecConfig(true, "retakehud");
@@ -60,7 +58,6 @@ public Action displayHud(Handle timer)
 	char bombsite[8];
 	bombsite = (Retakes_GetCurrrentBombsite() == BombsiteA) ? "A" : "B";
 
-	bool usingAutoplant = GetConVarBool(cvar_usingautoplant);
 	bool showTerrorists = GetConVarBool(cvar_showterrorists);
 	int red = GetConVarInt(cvar_red);
 	int green = GetConVarInt(cvar_green);
@@ -78,7 +75,7 @@ public Action displayHud(Handle timer)
 		{
 			SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
 
-			if (!usingAutoplant && HasBomb(i))
+			if (HasBomb(i))
 			{
 			    // We always want to show this one regardless
                 ShowHudText(i, 5, "Plant The Bomb!");

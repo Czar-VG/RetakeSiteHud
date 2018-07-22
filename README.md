@@ -6,4 +6,5 @@ To be used with splewis version of the [retakes](https://github.com/splewis/csgo
 Add the `retakeshud.smx` into your `addons/sourcemod/plugins/` folder.
 
 # How does it look?
-![Example](https://i.gyazo.com/5c7847f8f2f13ba40f2ed082382308b8.jpg)
+![T](https://steamuserimages-a.akamaihd.net/ugc/937196994992026611/4775A7011E1AB4856189BB2DA3C1DF5B8E5FF245/)
+![CT](https://steamuserimages-a.akamaihd.net/ugc/937196994992027300/FFFF6864F2268006C704B6981498334C85A7F385/?interpolation=lanczos-none&output-format=jpeg&output-quality=95&fit=inside%7C1024%3A576&composite-to=*,*%7C1024%3A576&background-color=black)
