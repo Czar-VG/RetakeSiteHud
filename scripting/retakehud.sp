@@ -1,11 +1,13 @@
 #include <sourcemod>
 #include <sdktools>
 #include <retakes>
+#include <cstrike>
 
+#pragma semicolon 1
 #pragma newdecls required
 
-#define PLUGIN_AUTHOR "Czar"
-#define PLUGIN_VERSION "1.3"
+#define PLUGIN_AUTHOR "Czar, B3none"
+#define PLUGIN_VERSION "1.4"
 
 Handle cvar_red = INVALID_HANDLE;
 Handle cvar_green = INVALID_HANDLE;
@@ -15,14 +17,16 @@ Handle cvar_fadeout = INVALID_HANDLE;
 Handle cvar_xcord = INVALID_HANDLE;
 Handle cvar_ycord = INVALID_HANDLE;
 Handle cvar_holdtime = INVALID_HANDLE;
+Handle cvar_usingautoplant = INVALID_HANDLE;
+Handle cvar_showterrorists = INVALID_HANDLE;
 
-public Plugin myinfo = 
+public Plugin myinfo =
 {
 	name = "Retake hud",
 	author = PLUGIN_AUTHOR,
 	description = "Bombsite Hud",
 	version = PLUGIN_VERSION,
-	url = ""
+	url = "https://github.com/Czar-VG/RetakeSiteHud"
 };
 
 public void OnPluginStart()
@@ -35,27 +39,29 @@ public void OnPluginStart()
 	cvar_holdtime = CreateConVar("sm_holdtime", "5.0");
 	cvar_xcord = CreateConVar("sm_xcord", "0.42");
 	cvar_ycord = CreateConVar("sm_ycord", "0.3");
-	
+	cvar_usingautoplant = CreateConVar("sm_usingautoplant", "0");
+	cvar_showterrorists = CreateConVar("sm_showterrorists", "1");
+
 	AutoExecConfig(true, "retakehud");
 	HookEvent("round_start", Event_OnRoundStart);
 }
 public void Event_OnRoundStart(Handle event, const char[] name, bool dontBroadcast)
 {
-	CreateTimer(1.0, Timer_Advertise);
+	CreateTimer(1.0, displayHud);
 }
 
-public Action Timer_Advertise(Handle timer)
+public Action displayHud(Handle timer)
 {
-	displayHud();
-}
+	if (IsWarmup())
+	{
+		return;
+	}
 
-public void displayHud()
-{
-	char sitechar[3];
-	
-	if(Retakes_GetCurrrentBombsite() == BombsiteA)sitechar = "A";
-	else sitechar = "B";
-	
+	char bombsite[8];
+	bombsite = (Retakes_GetCurrrentBombsite() == BombsiteA) ? "A" : "B";
+
+	bool usingAutoplant = GetConVarBool(cvar_usingautoplant);
+	bool showTerrorists = GetConVarBool(cvar_showterrorists);
 	int red = GetConVarInt(cvar_red);
 	int green = GetConVarInt(cvar_green);
 	int blue = GetConVarInt(cvar_blue);
@@ -64,23 +70,42 @@ public void displayHud()
 	float holdtime = GetConVarFloat(cvar_holdtime);
 	float xcord = GetConVarFloat(cvar_xcord);
 	float ycord = GetConVarFloat(cvar_ycord);
-	if (GameRules_GetProp("m_bWarmupPeriod") == 0) 
+
+	for (int i = 1; i <= MaxClients; i++)
 	{
-		for(int i = 1; i <= MaxClients; i++)
+		int clientTeam = GetClientTeam(i);
+		if (IsValidClient(i))
 		{
-			if(IsClientInGame(i) && !IsFakeClient(i))
+			SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
+
+			if (!usingAutoplant && HasBomb(i))
 			{
-				if(GetPlayerWeaponSlot( i, 4 ) != -1)
-				{
-					SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-					ShowHudText(i, 5, "Plant The Bomb!");
-				}
-				else
-				{
-					SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-					ShowHudText(i, 5, "Retake Bombsite: %s", sitechar);
-				}
+			    // We always want to show this one regardless
+                ShowHudText(i, 5, "Plant The Bomb!");
+			}
+			else if (clientTeam == CS_TEAM_CT || (clientTeam == CS_TEAM_T && showTerrorists))
+			{
+                ShowHudText(i, 5, "%s Bombsite: %s", clientTeam == CS_TEAM_T ? "Defend" : "Retake", bombsite);
 			}
 		}
 	}
+}
+
+stock bool IsValidClient(int client)
+{
+    return client > 0
+        && client <= MaxClients
+        && IsClientConnected(client)
+        && IsClientInGame(client)
+        && !IsFakeClient(client);
+}
+
+stock bool HasBomb(int client)
+{
+    return GetPlayerWeaponSlot(client, 4) != -1;
+}
+
+stock bool IsWarmup()
+{
+	return GameRules_GetProp("m_bWarmupPeriod") == 1;
 }
