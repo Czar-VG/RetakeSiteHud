@@ -7,7 +7,7 @@
 #pragma newdecls required
 
 #define PLUGIN_AUTHOR "Czar, B3none"
-#define PLUGIN_VERSION "1.4"
+#define PLUGIN_VERSION "1.5.0"
 
 Handle cvar_red = INVALID_HANDLE;
 Handle cvar_green = INVALID_HANDLE;
@@ -18,6 +18,16 @@ Handle cvar_xcord = INVALID_HANDLE;
 Handle cvar_ycord = INVALID_HANDLE;
 Handle cvar_holdtime = INVALID_HANDLE;
 Handle cvar_showterrorists = INVALID_HANDLE;
+
+bool showTerrorists;
+int red;
+int green;
+int blue;
+float fadein;
+float fadeout;
+float holdtime;
+float xcord;
+float ycord;
 
 public Plugin myinfo =
 {
@@ -30,6 +40,8 @@ public Plugin myinfo =
 
 public void OnPluginStart()
 {
+	LoadTranslations ("retakehud.phrases");
+	
 	cvar_red = CreateConVar("sm_redhud", "255");
 	cvar_green = CreateConVar("sm_greenhud", "255");
 	cvar_blue = CreateConVar("sm_bluehud", "255");
@@ -43,6 +55,20 @@ public void OnPluginStart()
 	AutoExecConfig(true, "retakehud");
 	HookEvent("round_start", Event_OnRoundStart);
 }
+
+public void OnConfigsExecuted()
+{
+	showTerrorists = GetConVarBool(cvar_showterrorists);
+	red = GetConVarInt(cvar_red);
+	green = GetConVarInt(cvar_green);
+	blue = GetConVarInt(cvar_blue);
+	fadein = GetConVarFloat(cvar_fadein);
+	fadeout = GetConVarFloat(cvar_fadeout);
+	holdtime = GetConVarFloat(cvar_holdtime);
+	xcord = GetConVarFloat(cvar_xcord);
+	ycord = GetConVarFloat(cvar_ycord);
+}
+
 public void Event_OnRoundStart(Handle event, const char[] name, bool dontBroadcast)
 {
 	CreateTimer(1.0, displayHud);
@@ -58,16 +84,6 @@ public Action displayHud(Handle timer)
 	char bombsite[8];
 	bombsite = (Retakes_GetCurrrentBombsite() == BombsiteA) ? "A" : "B";
 
-	bool showTerrorists = GetConVarBool(cvar_showterrorists);
-	int red = GetConVarInt(cvar_red);
-	int green = GetConVarInt(cvar_green);
-	int blue = GetConVarInt(cvar_blue);
-	float fadein = GetConVarFloat(cvar_fadein);
-	float fadeout = GetConVarFloat(cvar_fadeout);
-	float holdtime = GetConVarFloat(cvar_holdtime);
-	float xcord = GetConVarFloat(cvar_xcord);
-	float ycord = GetConVarFloat(cvar_ycord);
-
 	for (int i = 1; i <= MaxClients; i++)
 	{
 		int clientTeam = GetClientTeam(i);
@@ -78,11 +94,11 @@ public Action displayHud(Handle timer)
 			if (HasBomb(i))
 			{
 			    // We always want to show this one regardless
-                ShowHudText(i, 5, "Plant The Bomb!");
+                ShowHudText(i, 5, "%T!", "Planter Message");
 			}
 			else if (clientTeam == CS_TEAM_CT || (clientTeam == CS_TEAM_T && showTerrorists))
 			{
-                ShowHudText(i, 5, "%s Bombsite: %s", clientTeam == CS_TEAM_T ? "Defend" : "Retake", bombsite);
+                ShowHudText(i, 5, "%T: %s", clientTeam == CS_TEAM_T ? "Terrorist Message" : "Counter Terrorist Message", bombsite);
 			}
 		}
 	}

@@ -1,0 +1,15 @@
+﻿"Phrases"
+{
+        "Planter Message"
+        {
+			"en"		"Plant The Bomb!"
+		}
+		"Terrorist Message"
+        {
+			"en"		"Defend Bombsite"
+		}
+		"Counter Terrorist Message"
+        {
+			"en"		"Retake Bombsite"
+		}
+}
