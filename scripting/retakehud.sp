@@ -7,7 +7,7 @@
 #pragma newdecls required
 
 #define PLUGIN_AUTHOR "Czar, B3none"
-#define PLUGIN_VERSION "1.5.0"
+#define PLUGIN_VERSION "1.5.1"
 
 Handle cvar_red = INVALID_HANDLE;
 Handle cvar_green = INVALID_HANDLE;
@@ -86,19 +86,20 @@ public Action displayHud(Handle timer)
 
 	for (int i = 1; i <= MaxClients; i++)
 	{
-		int clientTeam = GetClientTeam(i);
 		if (IsValidClient(i))
 		{
+			int clientTeam = GetClientTeam(i);
+			
 			SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
 
 			if (HasBomb(i))
 			{
 			    // We always want to show this one regardless
-                ShowHudText(i, 5, "%T!", "Planter Message");
+                	    ShowHudText(i, 5, "%T!", "Planter Message");
 			}
 			else if (clientTeam == CS_TEAM_CT || (clientTeam == CS_TEAM_T && showTerrorists))
 			{
-                ShowHudText(i, 5, "%T: %s", clientTeam == CS_TEAM_T ? "Terrorist Message" : "Counter Terrorist Message", bombsite);
+                	    ShowHudText(i, 5, "%T: %s", clientTeam == CS_TEAM_T ? "Terrorist Message" : "Counter Terrorist Message", bombsite);
 			}
 		}
 	}
