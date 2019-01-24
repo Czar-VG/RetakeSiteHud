@@ -3,16 +3,16 @@
     "Planter Message"
     {
         "en"		"Plant The Bomb!"
-        "swe"		"Plantera Bomben!"
+        "se"		"Plantera Bomben!"
     }
     "Terrorist Message"
     {
         "en"		"Defend Bombsite"
-        "swe"		"Försvara Bombplatsen"
+        "se"		"Försvara Bombplatsen"
     }
     "Counter Terrorist Message"
     {
         "en"		"Retake Bombsite"
-        "swe"		"Återta Bombplatsen"
+        "se"		"Återta Bombplatsen"
     }
 }
