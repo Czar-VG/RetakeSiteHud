@@ -89,17 +89,17 @@ public Action displayHud(Handle timer)
         if (IsValidClient(i))
         {
             int clientTeam = GetClientTeam(i);
-
+            
             SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-
+            
             if (HasBomb(i))
             {
                 // We always want to show this one regardless
-                ShowHudText(i, 5, "%t!", "Planter Message");
+                ShowHudText(i, 5, "%T!", "Planter Message", i);
             }
             else if (clientTeam == CS_TEAM_CT || (clientTeam == CS_TEAM_T && showTerrorists))
             {
-                ShowHudText(i, 5, "%t: %s", clientTeam == CS_TEAM_T ? "Terrorist Message" : "Counter Terrorist Message", bombsite);
+                ShowHudText(i, 5, "%T: %s", clientTeam == CS_TEAM_T ? "Terrorist Message" : "Counter Terrorist Message", i, bombsite);
             }
         }
     }
