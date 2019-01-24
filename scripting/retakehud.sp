@@ -7,7 +7,7 @@
 #pragma newdecls required
 
 #define PLUGIN_AUTHOR "Czar, B3none"
-#define PLUGIN_VERSION "1.5.1"
+#define PLUGIN_VERSION "1.5.2"
 
 Handle cvar_red = INVALID_HANDLE;
 Handle cvar_green = INVALID_HANDLE;
@@ -89,17 +89,17 @@ public Action displayHud(Handle timer)
         if (IsValidClient(i))
         {
             int clientTeam = GetClientTeam(i);
-
+            
             SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-
+            
             if (HasBomb(i))
             {
                 // We always want to show this one regardless
-                ShowHudText(i, 5, "%T!", "Planter Message");
+                ShowHudText(i, 5, "%t!", "Planter Message", i);
             }
             else if (clientTeam == CS_TEAM_CT || (clientTeam == CS_TEAM_T && showTerrorists))
             {
-                ShowHudText(i, 5, "%T: %s", clientTeam == CS_TEAM_T ? "Terrorist Message" : "Counter Terrorist Message", bombsite);
+                ShowHudText(i, 5, "%t: %s", clientTeam == CS_TEAM_T ? "Terrorist Message" : "Counter Terrorist Message", i, bombsite);
             }
         }
     }
@@ -107,11 +107,7 @@ public Action displayHud(Handle timer)
 
 stock bool IsValidClient(int client)
 {
-    return client > 0
-        && client <= MaxClients
-        && IsClientConnected(client)
-        && IsClientInGame(client)
-        && !IsFakeClient(client);
+    return client > 0 && client <= MaxClients && IsClientConnected(client) && IsClientInGame(client) && !IsFakeClient(client);
 }
 
 stock bool HasBomb(int client)
