@@ -89,9 +89,9 @@ public Action displayHud(Handle timer)
         if (IsValidClient(i))
         {
             int clientTeam = GetClientTeam(i);
-            
+
             SetHudTextParams(xcord, ycord, holdtime, red, green, blue, 255, 0, 0.25, fadein, fadeout);
-            
+
             if (HasBomb(i))
             {
                 // We always want to show this one regardless
