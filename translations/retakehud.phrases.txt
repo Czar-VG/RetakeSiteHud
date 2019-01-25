@@ -1,15 +1,18 @@
-﻿"Phrases"
+"Phrases"
 {
-        "Planter Message"
-        {
-			"en"		"Plant The Bomb!"
-		}
-		"Terrorist Message"
-        {
-			"en"		"Defend Bombsite"
-		}
-		"Counter Terrorist Message"
-        {
-			"en"		"Retake Bombsite"
-		}
+    "Planter Message"
+    {
+        "en"		"Plant The Bomb!"
+        "sv"		"Plantera Bomben!"
+    }
+    "Terrorist Message"
+    {
+        "en"		"Defend Bombsite"
+        "sv"		"Försvara Bombplatsen"
+    }
+    "Counter Terrorist Message"
+    {
+        "en"		"Retake Bombsite"
+        "sv"		"Återta Bombplatsen"
+    }
 }
